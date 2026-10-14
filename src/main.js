@@ -26,10 +26,9 @@ FOG({
 });
 
 const names = [
-  "CS Student",
-  "Problem Solver",
-  "Tech Enthusiast",
-  "Web Developer",
+  "Platform Engineer",
+  "Go Developer",
+  "Kubernetes Builder",
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -59,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const leftCard = project.querySelector(".left-card");
     const rightCard = project.querySelector(".right-card");
     rightCard.addEventListener("click", () => {
+      if (!window.matchMedia("(min-width: 1024px)").matches) return;
       leftCard.classList.add("animate-shuffleLeft");
       leftCard.classList.toggle("opacity-60");
       setTimeout(() => {
@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 1000);
     });
     leftCard.addEventListener("click", () => {
+      if (!window.matchMedia("(min-width: 1024px)").matches) return;
       leftCard.classList.add("animate-shuffleLeft");
       leftCard.classList.toggle("opacity-60");
       setTimeout(() => {

@@ -23,7 +23,7 @@ export default {
             transform: "translate(0px,-50%)",
           },
           "50%": {
-            transform: "translate(-300px, -50%)",
+            transform: "translate(-3rem, -50%)",
           },
         },
         shuffleRight: {
@@ -31,7 +31,7 @@ export default {
             transform: "translate(0px,-50%)",
           },
           "50%": {
-            transform: "translate(300px, -50%)",
+            transform: "translate(3rem, -50%)",
           },
         },
       },
