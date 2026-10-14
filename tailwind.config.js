@@ -10,29 +10,11 @@ export default {
     extend: {
       animation: {
         cursor: "cursor 1s ease infinite",
-        shuffleLeft: "shuffleLeft 1s ease",
-        shuffleRight: "shuffleRight 1s ease",
       },
       keyframes: {
         cursor: {
           "0%, 100%": { opacity: "0" },
           "50%": { opacity: "1" },
-        },
-        shuffleLeft: {
-          "0%, 100%": {
-            transform: "translate(0px,-50%)",
-          },
-          "50%": {
-            transform: "translate(-3rem, -50%)",
-          },
-        },
-        shuffleRight: {
-          "0%, 100%": {
-            transform: "translate(0px,-50%)",
-          },
-          "50%": {
-            transform: "translate(3rem, -50%)",
-          },
         },
       },
       colors: {

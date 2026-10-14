@@ -57,44 +57,81 @@ document.addEventListener("DOMContentLoaded", () => {
   projects.forEach((project) => {
     const leftCard = project.querySelector(".left-card");
     const rightCard = project.querySelector(".right-card");
-    rightCard.addEventListener("click", () => {
-      if (!window.matchMedia("(min-width: 1024px)").matches) return;
+    let shuffleState = null;
+
+    function swapLayers() {
+      if (!shuffleState) return;
+      leftCard.classList.toggle("z-10", !shuffleState.leftFront);
+      rightCard.classList.toggle("z-10", shuffleState.leftFront);
+    }
+
+    function finishShuffle() {
+      if (!shuffleState) return;
+      const state = shuffleState;
+      clearTimeout(state.layerTimer);
+      swapLayers();
+      shuffleState = null;
+
+      leftCard.classList.toggle("opacity-60", state.leftFront);
+      rightCard.classList.toggle("opacity-60", !state.leftFront);
+      leftCard.classList.remove("animate-shuffleLeft");
+      rightCard.classList.remove("animate-shuffleRight");
+      project.classList.remove("is-shuffling");
+    }
+
+    function shuffle(event) {
+      if (
+        shuffleState ||
+        event.target.closest("a") ||
+        !window.matchMedia("(min-width: 1024px)").matches
+      ) {
+        return;
+      }
+
+      const leftBounds = leftCard.getBoundingClientRect();
+      const rightBounds = rightCard.getBoundingClientRect();
+      const scale = 0.75;
+      // Shrink at the midpoint so the cards can separate without leaving the viewport.
+      const distance = Math.max(
+        0,
+        Math.min(
+          300,
+          leftBounds.left + (leftBounds.width * (1 - scale)) / 2 - 16,
+          window.innerWidth - rightBounds.right + (rightBounds.width * (1 - scale)) / 2 - 16
+        )
+      );
+      project.style.setProperty("--shuffle-distance", `${distance}px`);
+      project.style.setProperty("--shuffle-scale", scale);
+
+      shuffleState = {
+        leftFront: leftCard.classList.contains("z-10"),
+        layerTimer: null,
+      };
+      [leftCard, rightCard].forEach((card) => {
+        const willBeFront = card === leftCard ? !shuffleState.leftFront : shuffleState.leftFront;
+        card.style.setProperty("--shuffle-opacity-from", getComputedStyle(card).opacity);
+        card.style.setProperty("--shuffle-opacity-to", willBeFront ? "1" : "0.6");
+      });
+
+      project.classList.add("is-shuffling");
       leftCard.classList.add("animate-shuffleLeft");
-      leftCard.classList.toggle("opacity-60");
-      setTimeout(() => {
-        leftCard.classList.toggle("z-10");
-      }, 500);
-      setTimeout(() => {
-        leftCard.classList.remove("animate-shuffleLeft");
-      }, 1000);
       rightCard.classList.add("animate-shuffleRight");
-      setTimeout(() => {
-        rightCard.classList.toggle("z-10");
-      }, 500);
-      rightCard.classList.toggle("opacity-60");
-      setTimeout(() => {
-        rightCard.classList.remove("animate-shuffleRight");
-      }, 1000);
+      shuffleState.layerTimer = setTimeout(swapLayers, 500);
+    }
+
+    leftCard.addEventListener("click", shuffle);
+    rightCard.addEventListener("click", shuffle);
+    rightCard.addEventListener("animationend", (event) => {
+      if (event.target === rightCard && event.animationName === "shuffleRight") {
+        finishShuffle();
+      }
     });
-    leftCard.addEventListener("click", () => {
-      if (!window.matchMedia("(min-width: 1024px)").matches) return;
-      leftCard.classList.add("animate-shuffleLeft");
-      leftCard.classList.toggle("opacity-60");
-      setTimeout(() => {
-        leftCard.classList.toggle("z-10");
-      }, 500);
-      setTimeout(() => {
-        leftCard.classList.remove("animate-shuffleLeft");
-      }, 1000);
-      rightCard.classList.add("animate-shuffleRight");
-      setTimeout(() => {
-        rightCard.classList.toggle("z-10");
-      }, 500);
-      rightCard.classList.toggle("opacity-60");
-      setTimeout(() => {
-        rightCard.classList.remove("animate-shuffleRight");
-      }, 1000);
+    rightCard.addEventListener("animationcancel", (event) => {
+      if (event.target === rightCard && event.animationName === "shuffleRight") {
+        finishShuffle();
+      }
     });
+    window.addEventListener("resize", finishShuffle);
   });
 });
 

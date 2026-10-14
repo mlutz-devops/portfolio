@@ -255,7 +255,7 @@ nav {
     max-width: 100%;
   }
   .project-description {
-    @apply flex justify-center text-black transition-all duration-200 flex-col w-full;
+    @apply flex justify-center text-black transition-transform duration-200 flex-col w-full;
     min-width: 0;
   }
   .project-info {
@@ -271,8 +271,15 @@ nav {
     min-height: 2.75rem;
   }
   .project-image {
-    @apply object-contain w-full transition-all duration-200 rounded-lg;
+    @apply object-contain max-w-full bg-main transition-transform duration-200 rounded-lg;
+    width: auto;
+    height: auto;
+    align-self: flex-start;
     max-height: 28rem;
+  }
+  .project.is-shuffling .left-card,
+  .project.is-shuffling .right-card {
+    transition: none;
   }
   .line {
     @apply absolute w-full border-2 bottom-0 opacity-40 rounded-lg;
@@ -330,7 +337,7 @@ nav {
   .project-image {
     position: absolute;
     top: 50%;
-    width: 75%;
+    max-width: 75%;
     transform: translateY(-50%);
   }
 
@@ -350,5 +357,56 @@ nav {
 @media (hover: hover) and (pointer: fine) {
   .skill:hover {
     transform: scale(1.05);
+  }
+}
+
+/* Keep project animations here so Vite hot-reloads timing changes reliably. */
+.animate-shuffleLeft {
+  animation: shuffleLeft 1s ease both;
+}
+
+.animate-shuffleRight {
+  animation: shuffleRight 1s ease both;
+}
+
+@keyframes shuffleLeft {
+  0% {
+    transform: translate(0, -50%) scale(1);
+    opacity: var(--shuffle-opacity-from, 1);
+  }
+  25% {
+    opacity: var(--shuffle-opacity-from, 1);
+  }
+  45% {
+    opacity: var(--shuffle-opacity-to, 1);
+  }
+  50% {
+    transform: translate(calc(-1 * var(--shuffle-distance, 300px)), -50%) scale(var(--shuffle-scale, 0.75));
+    opacity: var(--shuffle-opacity-to, 1);
+  }
+  100% {
+    transform: translate(0, -50%) scale(1);
+    opacity: var(--shuffle-opacity-to, 1);
+  }
+}
+
+@keyframes shuffleRight {
+  0% {
+    transform: translate(0, -50%) scale(1);
+    opacity: var(--shuffle-opacity-from, 1);
+  }
+  25% {
+    opacity: var(--shuffle-opacity-from, 1);
+  }
+  45% {
+    opacity: var(--shuffle-opacity-to, 1);
+  }
+  50% {
+    transform: translate(var(--shuffle-distance, 300px), -50%) scale(var(--shuffle-scale, 0.75));
+    opacity: var(--shuffle-opacity-to, 1);
+  }
+  100% {
+    transform: translate(0, -50%) scale(1);
+    opacity: var(--shuffle-opacity-to, 1);
   }
 }
